@@ -1,0 +1,1978 @@
+<!--  <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Keystone | Login</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #ffffff;
+
+            background:
+                radial-gradient(circle at 80% 20%,
+                    rgba(43, 93, 153, 0.35),
+                    transparent 35%),
+                radial-gradient(circle at 15% 80%,
+                    rgba(212, 160, 69, 0.12),
+                    transparent 30%),
+                linear-gradient(
+                    135deg,
+                    #061426 0%,
+                    #0a1d35 45%,
+                    #102b4c 100%
+                );
+
+            position: relative;
+        }
+
+
+        /* ================================
+           BACKGROUND ARCHITECTURE
+        ================================= */
+
+        body::before {
+            content: "";
+            position: fixed;
+            width: 650px;
+            height: 650px;
+
+            right: -180px;
+            top: -120px;
+
+            border: 22px solid rgba(211, 160, 70, 0.12);
+            border-radius: 50%;
+
+            transform: rotate(25deg);
+
+            box-shadow:
+                0 0 80px rgba(211, 160, 70, 0.08),
+                inset 0 0 80px rgba(211, 160, 70, 0.05);
+
+            pointer-events: none;
+        }
+
+
+        body::after {
+            content: "";
+            position: fixed;
+
+            width: 400px;
+            height: 400px;
+
+            left: -220px;
+            bottom: -180px;
+
+            border: 1px solid rgba(212, 160, 69, 0.25);
+
+            transform: rotate(45deg);
+
+            box-shadow:
+                0 0 0 80px rgba(255,255,255,0.015),
+                0 0 0 160px rgba(255,255,255,0.01);
+
+            pointer-events: none;
+        }
+
+
+        /* ================================
+           MAIN CONTAINER
+        ================================= */
+
+        .page {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+
+        .container {
+            width: 1180px;
+            max-width: 100%;
+
+            display: grid;
+            grid-template-columns: 1fr 460px;
+
+            gap: 70px;
+
+            align-items: center;
+        }
+
+
+        /* ================================
+           LEFT SIDE
+        ================================= */
+
+        .branding {
+            padding: 30px;
+        }
+
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .logo {
+            width: 70px;
+            height: 78px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 3px solid #d9a441;
+
+            color: #d9a441;
+
+            font-family: Georgia, serif;
+            font-size: 38px;
+            font-weight: bold;
+
+            clip-path: polygon(
+                15% 0,
+                85% 0,
+                100% 18%,
+                90% 100%,
+                10% 100%,
+                0 18%
+            );
+
+            background: rgba(5, 19, 36, 0.55);
+
+            box-shadow:
+                0 0 25px rgba(217, 164, 65, 0.18);
+        }
+
+
+        .brand-name {
+            font-family: Georgia, serif;
+            font-size: 43px;
+            letter-spacing: 5px;
+            font-weight: bold;
+        }
+
+
+        .brand-subtitle {
+            margin-top: 6px;
+
+            color: #d9a441;
+
+            font-size: 14px;
+            letter-spacing: 4px;
+            font-weight: 600;
+        }
+
+
+        .gold-line {
+            width: 420px;
+            max-width: 100%;
+
+            height: 1px;
+
+            margin: 35px 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    #d9a441,
+                    transparent
+                );
+
+            position: relative;
+        }
+
+
+        .gold-line::after {
+            content: "◆";
+
+            position: absolute;
+            left: 50%;
+            top: -9px;
+
+            transform: translateX(-50%);
+
+            color: #d9a441;
+            font-size: 12px;
+        }
+
+
+        .branding h1 {
+            font-size: 43px;
+            line-height: 1.2;
+
+            margin-bottom: 20px;
+
+            font-weight: 700;
+        }
+
+
+        .branding h1 span {
+            color: #d9a441;
+        }
+
+
+        .description {
+            max-width: 520px;
+
+            color: #c7d2df;
+
+            font-size: 17px;
+            line-height: 1.8;
+
+            margin-bottom: 35px;
+        }
+
+
+        /* ================================
+           FEATURES
+        ================================= */
+
+        .features {
+            display: flex;
+            gap: 35px;
+            flex-wrap: wrap;
+        }
+
+
+        .feature {
+            width: 130px;
+            text-align: center;
+        }
+
+
+        .feature-icon {
+            width: 58px;
+            height: 58px;
+
+            margin: auto;
+            margin-bottom: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid rgba(217,164,65,0.6);
+
+            border-radius: 14px;
+
+            color: #d9a441;
+
+            font-size: 25px;
+
+            background: rgba(255,255,255,0.04);
+
+            backdrop-filter: blur(10px);
+
+            transition: 0.3s;
+        }
+
+
+        .feature:hover .feature-icon {
+            transform: translateY(-5px);
+
+            background: rgba(217,164,65,0.1);
+
+            box-shadow:
+                0 10px 30px rgba(217,164,65,0.15);
+        }
+
+
+        .feature p {
+            color: #d8e0e8;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+
+        /* ================================
+           LOGIN CARD
+        ================================= */
+
+        .login-card {
+            background: rgba(255,255,255,0.96);
+
+            color: #16263d;
+
+            border-radius: 24px;
+
+            padding: 42px;
+
+            box-shadow:
+                0 35px 80px rgba(0,0,0,0.35),
+                0 10px 30px rgba(0,0,0,0.15);
+
+            animation: cardAppear 0.8s ease;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .login-card::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 5px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #0e3d6e,
+                    #d9a441,
+                    #0e3d6e
+                );
+        }
+
+
+        @keyframes cardAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        /* ================================
+           LOGIN HEADER
+        ================================= */
+
+        .login-header {
+            text-align: center;
+
+            margin-bottom: 28px;
+        }
+
+
+        .mini-logo {
+            width: 55px;
+            height: 60px;
+
+            margin: auto;
+            margin-bottom: 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #0c2745;
+
+            color: #d9a441;
+
+            font-family: Georgia, serif;
+
+            font-size: 30px;
+            font-weight: bold;
+
+            clip-path: polygon(
+                15% 0,
+                85% 0,
+                100% 18%,
+                90% 100%,
+                10% 100%,
+                0 18%
+            );
+
+            box-shadow:
+                0 8px 20px rgba(12,39,69,0.25);
+        }
+
+
+        .login-header h2 {
+            font-family: Georgia, serif;
+
+            font-size: 30px;
+
+            margin-bottom: 8px;
+
+            color: #132a45;
+        }
+
+
+        .login-header p {
+            color: #718096;
+
+            font-size: 14px;
+        }
+
+
+        /* ================================
+           GOLD DIVIDER
+        ================================= */
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            margin: 20px 0 25px;
+        }
+
+
+        .divider span {
+            height: 1px;
+            flex: 1;
+
+            background: #e1e5ea;
+        }
+
+
+        .divider b {
+            color: #d9a441;
+            font-size: 11px;
+        }
+
+
+        /* ================================
+           ALERTS
+        ================================= */
+
+        .alert {
+            padding: 13px 15px;
+
+            border-radius: 9px;
+
+            margin-bottom: 15px;
+
+            font-size: 14px;
+        }
+
+
+        .error {
+            color: #b42318;
+
+            background: #fff1f0;
+
+            border: 1px solid #f3b4af;
+        }
+
+
+        .logout {
+            color: #24713c;
+
+            background: #effaf1;
+
+            border: 1px solid #b9dfc0;
+        }
+
+
+        /* ================================
+           FORM
+        ================================= */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+
+        label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #26374d;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .input-wrapper {
+            position: relative;
+        }
+
+
+        .input-icon {
+            position: absolute;
+
+            left: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #7b8796;
+
+            font-size: 18px;
+        }
+
+
+        input {
+            width: 100%;
+
+            height: 52px;
+
+            padding: 0 15px 0 45px;
+
+            border: 1px solid #d6dce3;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            font-size: 15px;
+
+            color: #182a40;
+
+            background: #fbfcfd;
+
+            transition: 0.25s;
+        }
+
+
+        input:focus {
+            border-color: #2b69b1;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px rgba(43,105,177,0.10);
+        }
+
+
+        input::placeholder {
+            color: #9ba5b1;
+        }
+
+
+        /* ================================
+           OPTIONS
+        ================================= */
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin: 5px 0 23px;
+
+            font-size: 13px;
+        }
+
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            color: #5c6877;
+        }
+
+
+        .remember input {
+            width: 16px;
+            height: 16px;
+
+            accent-color: #2366ad;
+        }
+
+
+        .forgot {
+            color: #1764b1;
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ================================
+           LOGIN BUTTON
+        ================================= */
+
+        .login-btn {
+            width: 100%;
+
+            height: 53px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #145da0,
+                    #236fc1
+                );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: all 0.3s;
+
+            box-shadow:
+                0 8px 18px rgba(35,111,193,0.25);
+        }
+
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 25px rgba(35,111,193,0.35);
+        }
+
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+
+        /* ================================
+           FOOTER
+        ================================= */
+
+        .login-footer {
+            text-align: center;
+
+            margin-top: 25px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #e7eaee;
+
+            color: #7b8794;
+
+            font-size: 13px;
+        }
+
+
+        .login-footer strong {
+            color: #263d58;
+        }
+
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media (max-width: 950px) {
+
+            .container {
+                grid-template-columns: 1fr;
+
+                max-width: 500px;
+
+                gap: 25px;
+            }
+
+
+            .branding {
+                text-align: center;
+
+                padding: 10px;
+            }
+
+
+            .logo-wrapper {
+                justify-content: center;
+            }
+
+
+            .branding h1 {
+                font-size: 32px;
+            }
+
+
+            .description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+
+            .gold-line {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+
+            .features {
+                justify-content: center;
+            }
+        }
+
+
+        @media (max-width: 550px) {
+
+            .page {
+                padding: 20px;
+            }
+
+
+            .login-card {
+                padding: 30px 22px;
+            }
+
+
+            .brand-name {
+                font-size: 32px;
+            }
+
+
+            .brand-subtitle {
+                font-size: 11px;
+            }
+
+
+            .branding h1 {
+                font-size: 27px;
+            }
+
+
+            .description {
+                font-size: 15px;
+            }
+
+
+            .features {
+                gap: 15px;
+            }
+
+
+            .feature {
+                width: 100px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+<div th:if="${success}" th:text="${success}" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#225b45;color:white;padding:12px 20px;border-radius:10px;z-index:10;"></div>
+
+<div class="page">
+
+    <div class="container">
+
+
+        <!-- ==========================
+             LEFT BRANDING SECTION
+        =========================== -->
+
+        <!--   <section class="branding">
+
+            <div class="logo-wrapper">
+
+                <div class="logo">
+                    K
+                </div>
+
+                <div>
+
+                    <div class="brand-name">
+                        KEYSTONE
+                    </div>
+
+                    <div class="brand-subtitle">
+                        WORK ORDER MANAGEMENT
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="gold-line"></div>
+
+
+            <h1>
+                Building Connections.<br>
+
+                <span>
+                    Delivering Excellence.
+                </span>
+            </h1>
+
+
+            <p class="description">
+
+                Keystone helps teams manage work orders,
+                coordinate service operations and deliver
+                reliable results with complete visibility.
+
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ✓
+                    </div>
+
+                    <p>
+                        Track &amp;<br>
+                        Manage Work Orders
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ⇄
+                    </div>
+
+                    <p>
+                        Collaborate<br>
+                        Seamlessly
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ♢
+                    </div>
+
+                    <p>
+                        Ensure Quality<br>
+                        Service
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================
+             LOGIN SECTION
+        =========================== -->
+
+         <!--  <section class="login-card">
+
+
+            <div class="login-header">
+
+                <div class="mini-logo">
+                    K
+                </div>
+
+                <h2>
+                    Welcome Back!
+                </h2>
+
+                <p>
+                    Sign in to continue to Keystone
+                </p>
+
+            </div>
+
+
+            <div class="divider">
+
+                <span></span>
+
+                <b>◆</b>
+
+                <span></span>
+
+            </div>
+
+
+            <!-- ERROR MESSAGE -->
+
+           <!--   <div
+                th:if="${param.error}"
+                class="alert error">
+
+                ⚠ &nbsp;
+                Invalid email or password.
+
+            </div>
+
+
+            <!-- LOGOUT MESSAGE -->
+
+            <!--  <div
+                th:if="${param.logout}"
+                class="alert logout">
+
+                ✓ &nbsp;
+                You have been logged out successfully.
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+
+          <!--  <form
+                th:action="@{/login}"
+                method="post">
+
+
+                <!-- EMAIL -->
+
+                <!--  <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            ✉
+                        </span>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <!--  <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                 <!--  <div class="options">
+
+                    <label class="remember">
+
+                        <input
+                            type="checkbox"
+                            name="remember-me">
+
+                        Remember me
+
+                    </label>
+
+
+                    <a
+                        href="#"
+                        class="forgot">
+
+                        Forgot password?
+
+                    </a>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                 <!--   <button
+                    type="submit"
+                    class="login-btn">
+
+                    ⇥ &nbsp; Login
+
+                </button>
+
+
+            </form>
+
+            
+           
+            <div class="login-footer">
+
+                Need help?
+
+                <strong>
+                    Contact your system administrator.
+                </strong>
+
+            </div>
+
+
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>-->
+
+<!--  <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Keystone - Login</title>
+
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .login-box {
+        width: 350px;
+        padding: 30px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px #ccc;
+    }
+
+    input,
+    button {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        box-sizing: border-box;
+    }
+
+    button {
+        background: #1976d2;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .error {
+        color: red;
+        margin-bottom: 10px;
+    }
+
+    .logout {
+        color: green;
+        margin-bottom: 10px;
+    }
+
+</style>
+
+</head>
+
+<body>
+<div th:if="${success}" th:text="${success}" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#225b45;color:white;padding:12px 20px;border-radius:10px;z-index:10;"></div>
+
+<div class="login-box">
+
+<h2>Keystone</h2>
+
+<h3>Login</h3>
+
+<div th:if="${param.error}" class="error">
+    Invalid email or password.
+</div>
+
+<div th:if="${param.logout}" class="logout">
+    You have been logged out successfully.
+</div>
+
+<form th\:action="@{/login}" method="post">
+
+    <label>Email</label>
+
+    <input
+        type="email"
+        name="email"
+        placeholder="Enter email"
+        required>
+
+    <label>Password</label>
+
+    <input
+        type="password"
+        name="password"
+        placeholder="Enter password"
+        required>
+
+    <button type="submit">
+        Login
+    </button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>-->
+
+ <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keystone - Login</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(5, 20, 40, 0.97),
+                    rgba(12, 43, 75, 0.94)
+                ),
+                url("https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=2000&q=85");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+
+            position: relative;
+        }
+
+        /* Background glow */
+
+        body::before {
+            content: "";
+            position: absolute;
+            width: 650px;
+            height: 650px;
+            border-radius: 50%;
+            right: -250px;
+            top: -250px;
+
+            background: rgba(212, 164, 70, 0.12);
+
+            box-shadow:
+                0 0 120px rgba(212, 164, 70, 0.18);
+
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            left: -250px;
+            bottom: -250px;
+
+            background: rgba(20, 104, 180, 0.18);
+
+            box-shadow:
+                0 0 120px rgba(20, 104, 180, 0.20);
+
+            pointer-events: none;
+        }
+
+        /* Decorative lines */
+
+        .background-lines {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .line {
+            position: absolute;
+            height: 1px;
+            background: rgba(220, 175, 80, 0.25);
+            transform: rotate(-35deg);
+        }
+
+        .line1 {
+            width: 500px;
+            left: -100px;
+            top: 15%;
+        }
+
+        .line2 {
+            width: 400px;
+            right: -80px;
+            bottom: 20%;
+        }
+
+        .line3 {
+            width: 300px;
+            left: 10%;
+            bottom: 10%;
+        }
+
+        /* Main container */
+
+        .main-container {
+            width: 1050px;
+            max-width: 92%;
+            min-height: 600px;
+
+            display: grid;
+            grid-template-columns: 1fr 430px;
+
+            position: relative;
+            z-index: 2;
+
+            border-radius: 28px;
+            overflow: hidden;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+
+            backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        /* Left section */
+
+        .left-section {
+            padding: 65px 55px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(6, 28, 52, 0.85),
+                    rgba(8, 47, 78, 0.55)
+                );
+        }
+
+        /* Logo */
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 45px;
+        }
+
+        .logo {
+            width: 65px;
+            height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #e0ae4c;
+
+            font-family: Georgia, serif;
+            font-size: 36px;
+            font-weight: bold;
+
+            border: 3px solid #e0ae4c;
+
+            clip-path: polygon(
+                15% 0,
+                85% 0,
+                100% 18%,
+                90% 100%,
+                10% 100%,
+                0 18%
+            );
+
+            background: rgba(255, 255, 255, 0.04);
+
+            box-shadow:
+                0 0 25px rgba(224, 174, 76, 0.15);
+        }
+
+        .brand-name {
+            color: white;
+            font-family: Georgia, serif;
+            font-size: 40px;
+            letter-spacing: 5px;
+            font-weight: bold;
+        }
+
+        .brand-subtitle {
+            color: #e0ae4c;
+            font-size: 12px;
+            letter-spacing: 3px;
+            margin-top: 6px;
+        }
+
+        /* Heading */
+
+        .left-section h1 {
+            color: white;
+            font-size: 42px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .left-section h1 span {
+            color: #e0ae4c;
+        }
+
+        .description {
+            max-width: 470px;
+            color: #cbd8e5;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        /* Gold divider */
+
+        .gold-line {
+            width: 360px;
+            max-width: 100%;
+            height: 1px;
+            margin-bottom: 35px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    #e0ae4c,
+                    transparent
+                );
+        }
+
+        /* Features */
+
+        .features {
+            display: flex;
+            gap: 30px;
+        }
+
+        .feature {
+            text-align: center;
+            width: 115px;
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+
+            margin: 0 auto 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            color: #e0ae4c;
+
+            border: 1px solid rgba(224, 174, 76, 0.5);
+
+            background: rgba(255, 255, 255, 0.05);
+
+            font-size: 22px;
+        }
+
+        .feature p {
+            color: #d5e0eb;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* Login side */
+
+        .right-section {
+            background: rgba(255, 255, 255, 0.97);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 45px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 340px;
+
+            padding: 0;
+
+            background: transparent;
+
+            border-radius: 0;
+
+            box-shadow: none;
+        }
+
+        /* Login heading */
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .mini-logo {
+            width: 54px;
+            height: 60px;
+
+            margin: 0 auto 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #092946;
+
+            color: #e0ae4c;
+
+            font-family: Georgia, serif;
+            font-size: 30px;
+            font-weight: bold;
+
+            clip-path: polygon(
+                15% 0,
+                85% 0,
+                100% 18%,
+                90% 100%,
+                10% 100%,
+                0 18%
+            );
+        }
+
+        .login-header h2 {
+            color: #102c49;
+            font-family: Georgia, serif;
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .login-header p {
+            color: #7b8794;
+            font-size: 14px;
+        }
+
+        /* Divider */
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0 25px;
+        }
+
+        .divider span {
+            flex: 1;
+            height: 1px;
+            background: #e2e6ea;
+        }
+
+        .divider b {
+            color: #d3a143;
+            font-size: 11px;
+        }
+
+        /* Alerts */
+
+        .error {
+            color: #b42318;
+            background: #fff1f0;
+            border: 1px solid #f1b7b2;
+
+            padding: 12px 14px;
+            border-radius: 9px;
+
+            margin-bottom: 15px;
+
+            font-size: 13px;
+        }
+
+        .logout {
+            color: #28733d;
+            background: #effaf1;
+            border: 1px solid #b8dfc0;
+
+            padding: 12px 14px;
+            border-radius: 9px;
+
+            margin-bottom: 15px;
+
+            font-size: 13px;
+        }
+
+        /* Form */
+
+        label {
+            display: block;
+
+            color: #26384c;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+
+            height: 50px;
+
+            padding: 0 15px;
+
+            margin: 8px 0 18px;
+
+            box-sizing: border-box;
+
+            border: 1px solid #d7dde4;
+
+            border-radius: 10px;
+
+            background: #f9fafb;
+
+            color: #1d3045;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: all 0.25s;
+        }
+
+        input:focus {
+            border-color: #2469ad;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px rgba(36, 105, 173, 0.10);
+        }
+
+        input::placeholder {
+            color: #9ba5af;
+        }
+
+        /* Login button */
+
+        button {
+            width: 100%;
+
+            height: 52px;
+
+            margin-top: 8px;
+
+            padding: 10px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #125b9e,
+                    #2674c5
+                );
+
+            color: white;
+
+            font-size: 16px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 20px rgba(25, 118, 210, 0.25);
+
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 25px rgba(25, 118, 210, 0.35);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+
+        .login-footer {
+            text-align: center;
+
+            margin-top: 25px;
+            padding-top: 20px;
+
+            border-top: 1px solid #e7eaee;
+
+            color: #8994a0;
+
+            font-size: 12px;
+        }
+
+        .login-footer span {
+            color: #183b5d;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 900px) {
+
+            body {
+                overflow-y: auto;
+            }
+
+            .main-container {
+                grid-template-columns: 1fr;
+                margin: 30px 0;
+            }
+
+            .left-section {
+                padding: 45px 35px;
+                text-align: center;
+            }
+
+            .logo-area {
+                justify-content: center;
+            }
+
+            .gold-line {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .features {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .main-container {
+                max-width: 95%;
+                border-radius: 20px;
+            }
+
+            .left-section {
+                padding: 35px 20px;
+            }
+
+            .right-section {
+                padding: 35px 25px;
+            }
+
+            .brand-name {
+                font-size: 28px;
+            }
+
+            .brand-subtitle {
+                font-size: 9px;
+            }
+
+            .left-section h1 {
+                font-size: 30px;
+            }
+
+            .features {
+                gap: 10px;
+            }
+
+            .feature {
+                width: 90px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+<div th:if="${success}" th:text="${success}" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#225b45;color:white;padding:12px 20px;border-radius:10px;z-index:10;"></div>
+
+    <div class="background-lines">
+        <div class="line line1"></div>
+        <div class="line line2"></div>
+        <div class="line line3"></div>
+    </div>
+
+
+    <div class="main-container">
+
+
+        <!-- LEFT SIDE -->
+
+        <div class="left-section">
+
+            <div class="logo-area">
+
+                <div class="logo">
+                    K
+                </div>
+
+                <div>
+
+                    <div class="brand-name">
+                        KEYSTONE
+                    </div>
+
+                    <div class="brand-subtitle">
+                        WORK ORDER MANAGEMENT
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="gold-line"></div>
+
+
+            <h1>
+                Building Connections.<br>
+                <span>Delivering Excellence.</span>
+            </h1>
+
+
+            <p class="description">
+                Keystone helps teams manage work orders,
+                coordinate service operations and deliver
+                reliable results with complete visibility.
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ✓
+                    </div>
+
+                    <p>
+                        Track &amp;<br>
+                        Manage Work Orders
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ⇄
+                    </div>
+
+                    <p>
+                        Collaborate<br>
+                        Seamlessly
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ◆
+                    </div>
+
+                    <p>
+                        Ensure Quality<br>
+                        Service
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE / LOGIN -->
+
+       <div class="right-section">
+
+            <div class="login-box">
+
+                <div class="login-header">
+
+                    <div class="mini-logo">
+                        K
+                    </div>
+
+                    <h2>
+                        Welcome Back!
+                    </h2>
+
+                    <p>
+                        Sign in to continue to Keystone
+                    </p>
+
+                </div>
+
+
+                <div class="divider">
+
+                    <span></span>
+
+                    <b>◆</b>
+
+                    <span></span>
+
+                </div>
+                
+          
+               <div
+                    th:if="${param.error}"
+                    class="error">
+
+                    ⚠ &nbsp;
+                    Invalid email or password.
+
+                </div> 
+
+
+                <div
+                    th:if="${param.logout}"
+                    class="logout">
+
+                    ✓ &nbsp;
+                    You have been logged out successfully.
+
+                </div>
+
+
+                <form th:action="@{/login}" method="post">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Enter email"
+                        required>
+
+
+                    <label>
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required>
+
+
+                    <button type="submit">
+                        ⇥ &nbsp; Login
+                    </button>
+
+                </form>
+<div style="text-align:center;margin-top:18px;color:#b9c7d5;">New to Keystone? <a th:href="@{/register}" style="color:#dbaa4b;font-weight:600;text-decoration:none;">Create an account</a></div>
+
+
+                <div class="login-footer">
+
+                    Need help?
+                    <span>
+                        Contact your system administrator.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

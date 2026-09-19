@@ -1,0 +1,970 @@
+<!--  <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customers - Keystone</title>
+</head>
+
+<body><div th:if="${success}" style="margin:15px 0;padding:12px;border-radius:8px;background:#1f5f3b;color:#fff" th:text="${success}"></div><div th:if="${error}" style="margin:15px 0;padding:12px;border-radius:8px;background:#6f2930;color:#fff" th:text="${error}"></div>
+
+<h1>Customers</h1>
+
+<a th:href="@{/customers/new}">
+    Add Customer
+</a>
+
+<br>
+<br>
+
+<table border="1" cellpadding="10">
+
+    <thead>
+
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr th:each="customer : ${customers}">
+
+        <td th:text="${customer.id}">
+            1
+        </td>
+
+        <td th:text="${customer.name}">
+            Customer Name
+        </td>
+
+        <td>
+
+            <a th:href="@{/customers/edit/{id}(id=${customer.id})}">
+                Edit
+            </a>
+
+            &nbsp;
+
+            <form th:action="@{/customers/delete/{id}(id=${customer.id})}"
+                  method="post"
+                  style="display:inline;">
+
+                <button type="submit">
+                    Delete
+                </button>
+
+            </form>
+
+        </td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+<br>
+
+<a th:href="@{/dashboard}">
+    Back to Dashboard
+</a>
+
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Customers - Keystone</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(5, 20, 40, 0.97),
+                    rgba(11, 44, 76, 0.94)
+                ),
+                url("https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=2000&q=85");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+
+            color: #ffffff;
+        }
+
+        /* Background decoration */
+
+        body::before {
+            content: "";
+
+            position: fixed;
+
+            width: 600px;
+            height: 600px;
+
+            right: -250px;
+            top: -250px;
+
+            border-radius: 50%;
+
+            background: rgba(218, 169, 75, 0.10);
+
+            box-shadow:
+                0 0 120px rgba(218, 169, 75, 0.15);
+
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+
+            position: fixed;
+
+            width: 450px;
+            height: 450px;
+
+            left: -250px;
+            bottom: -250px;
+
+            border-radius: 50%;
+
+            background: rgba(31, 108, 180, 0.15);
+
+            pointer-events: none;
+        }
+
+        /* Header */
+
+        header {
+            height: 85px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 55px;
+
+            background: rgba(4, 20, 37, 0.88);
+
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+
+            backdrop-filter: blur(15px);
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 2px solid #dbaa4b;
+
+            color: #dbaa4b;
+
+            font-family: Georgia, serif;
+
+            font-size: 27px;
+
+            font-weight: bold;
+
+            clip-path: polygon(
+                15% 0,
+                85% 0,
+                100% 18%,
+                90% 100%,
+                10% 100%,
+                0 18%
+            );
+        }
+
+        .brand-name {
+            font-family: Georgia, serif;
+
+            font-size: 25px;
+
+            letter-spacing: 3px;
+
+            font-weight: bold;
+        }
+
+        .brand-subtitle {
+            color: #dbaa4b;
+
+            font-size: 9px;
+
+            letter-spacing: 2px;
+
+            margin-top: 3px;
+        }
+
+        .header-status {
+            color: #c6d3df;
+
+            font-size: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #42c97b;
+
+            box-shadow:
+                0 0 10px rgba(66,201,123,0.7);
+        }
+
+        /* Navigation */
+
+        nav {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 14px 55px;
+
+            background: rgba(8, 32, 55, 0.82);
+
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+
+            backdrop-filter: blur(12px);
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        nav a {
+            text-decoration: none;
+
+            color: #c7d4e1;
+
+            padding: 10px 17px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            transition: 0.25s;
+        }
+
+        nav a:hover {
+            color: white;
+
+            background: rgba(255,255,255,0.09);
+
+            transform: translateY(-1px);
+        }
+
+        nav a:nth-child(2) {
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1c639e,
+                    #2b79bb
+                );
+
+            box-shadow:
+                0 5px 15px rgba(29,100,159,0.25);
+        }
+
+        /* Main */
+
+        main {
+            width: 1200px;
+
+            max-width: 92%;
+
+            margin: 0 auto;
+
+            padding: 45px 0 60px;
+
+            position: relative;
+
+            z-index: 1;
+        }
+
+        /* Page heading */
+
+        .page-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 30px;
+        }
+
+        .heading-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+        }
+
+        .page-icon {
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b2d4d,
+                    #185b8e
+                );
+
+            border: 1px solid rgba(219,170,75,0.45);
+
+            color: #dbaa4b;
+
+            font-family: Georgia, serif;
+
+            font-size: 24px;
+
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .page-header h1 {
+            font-family: Georgia, serif;
+
+            font-size: 34px;
+
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            color: #aebdcb;
+
+            font-size: 14px;
+        }
+
+        /* Add button */
+
+        .add-button {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 13px 21px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #145d9f,
+                    #2877c0
+                );
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            box-shadow:
+                0 8px 20px rgba(20,93,159,0.25);
+
+            transition: all 0.3s;
+        }
+
+        .add-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 25px rgba(20,93,159,0.35);
+        }
+
+        /* Table container */
+
+        .table-container {
+            background:
+                rgba(255,255,255,0.95);
+
+            border-radius: 18px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.30);
+
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Table */
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            color: #20354b;
+        }
+
+        thead {
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b2d4d,
+                    #174e78
+                );
+
+            color: white;
+        }
+
+        th {
+            padding: 18px 22px;
+
+            text-align: left;
+
+            font-size: 13px;
+
+            letter-spacing: 0.5px;
+
+            font-weight: 600;
+        }
+
+        td {
+            padding: 17px 22px;
+
+            border-bottom: 1px solid #e9edf1;
+
+            font-size: 14px;
+
+            color: #394b5e;
+        }
+
+        tbody tr {
+            transition: 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f5f8fb;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ID */
+
+        td:first-child {
+            color: #1764a8;
+
+            font-weight: 700;
+
+            width: 90px;
+        }
+
+        /* Customer name */
+
+        .customer-name {
+            font-weight: 600;
+
+            color: #20364d;
+        }
+
+        /* Actions */
+
+        .actions {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+        }
+
+        .edit-button {
+            display: inline-block;
+
+            padding: 8px 14px;
+
+            border-radius: 7px;
+
+            background: #edf5fc;
+
+            color: #1764a8;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+        .edit-button:hover {
+            background: #dcecf9;
+
+            transform: translateY(-1px);
+        }
+
+        .delete-button {
+            padding: 8px 14px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background: #fff0ef;
+
+            color: #c2382e;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .delete-button:hover {
+            background: #ffe0dd;
+
+            transform: translateY(-1px);
+        }
+
+        /* Empty state */
+
+        .empty-message {
+            text-align: center;
+
+            padding: 45px 20px;
+
+            color: #82909e;
+
+            font-size: 14px;
+        }
+
+        /* Back link */
+
+        .back-section {
+            margin-top: 25px;
+        }
+
+        .back-section a {
+            color: #cbd7e2;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+        .back-section a:hover {
+            color: #dbaa4b;
+        }
+
+        /* Footer */
+
+        footer {
+            text-align: center;
+
+            padding: 18px;
+
+            background:
+                rgba(3,17,31,0.80);
+
+            border-top: 1px solid rgba(255,255,255,0.08);
+
+            color: #8194a7;
+
+            font-size: 12px;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        footer span {
+            color: #dbaa4b;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 750px) {
+
+            header {
+                padding: 0 20px;
+            }
+
+            .header-status {
+                display: none;
+            }
+
+            nav {
+                padding: 12px 15px;
+
+                overflow-x: auto;
+            }
+
+            nav a {
+                white-space: nowrap;
+
+                font-size: 12px;
+
+                padding: 8px 12px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+
+                gap: 20px;
+
+                flex-direction: column;
+            }
+
+            .add-button {
+                width: 100%;
+
+                justify-content: center;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 650px;
+            }
+        }
+
+        @media (max-width: 450px) {
+
+            .brand-name {
+                font-size: 20px;
+            }
+
+            .brand-subtitle {
+                font-size: 7px;
+            }
+
+            .logo {
+                width: 42px;
+                height: 49px;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            main {
+                max-width: 94%;
+
+                padding-top: 30px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo-section">
+
+        <div class="logo">
+            K
+        </div>
+
+        <div>
+
+            <div class="brand-name">
+                KEYSTONE
+            </div>
+
+            <div class="brand-subtitle">
+                WORK ORDER MANAGEMENT
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-status">
+
+        <span class="status-dot"></span>
+
+        System Online
+
+    </div>
+
+</header>
+
+
+<!-- NAVIGATION -->
+
+<nav>
+
+    <a th:href="@{/dashboard}">
+        Dashboard
+    </a>
+
+    <a th:href="@{/customers}">
+        Customers
+    </a>
+
+    <a th:href="@{/sites}">
+        Sites
+    </a>
+
+    <a th:href="@{/work-orders}">
+        Work Orders
+    </a>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<main>
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div class="heading-left">
+
+            <div class="page-icon">
+                C
+            </div>
+
+            <div>
+
+                <h1>
+                    Customers
+                </h1>
+
+                <p>
+                    Manage your Keystone customer records
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a
+            th:href="@{/customers/new}"
+            class="add-button">
+
+            + &nbsp; Add Customer
+
+        </a>
+
+    </div>
+
+
+    <!-- CUSTOMER TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>
+                    ID
+                </th>
+
+                <th>
+                    Name
+                </th>
+
+                <th>
+                    Actions
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            <tr th:each="customer : ${customers}">
+
+                <td
+                    th:text="${customer.id}">
+
+                    1
+
+                </td>
+
+
+                <td
+                    class="customer-name"
+                    th:text="${customer.name}">
+
+                    Customer Name
+
+                </td>
+
+
+                <td>
+
+                    <div class="actions">
+
+
+                        <!-- EDIT -->
+
+                        <a
+                            th:href="@{/customers/edit/{id}(id=${customer.id})}"
+                            class="edit-button">
+
+                            ✎ &nbsp; Edit
+
+                        </a>
+
+
+                        <!-- DELETE -->
+
+                        <form
+                            th:action="@{/customers/delete/{id}(id=${customer.id})}"
+                            method="post"
+                            style="display:inline;">
+
+                            <button
+                                type="submit"
+                                class="delete-button">
+
+                                🗑 &nbsp; Delete
+
+                            </button>
+
+                        </form>
+
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+
+            <!-- EMPTY MESSAGE -->
+
+            <tr
+                th:if="${#lists.isEmpty(customers)}">
+
+                <td
+                    colspan="3"
+                    class="empty-message">
+
+                    No customers found.
+                    Click "Add Customer" to create your first customer.
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- BACK -->
+
+    <div class="back-section">
+
+        <a th:href="@{/dashboard}">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    Keystone Work Order Management System
+    &nbsp; • &nbsp;
+    <span>Customer Management</span>
+
+</footer>
+
+
+</body>
+
+</html>

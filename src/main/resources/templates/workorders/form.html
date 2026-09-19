@@ -1,0 +1,1232 @@
+<!--  <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Work Order - Keystone</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px #ccc;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #1976d2;
+            color: white;
+        }
+
+        .cancel {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <a th:href="@{/work-orders}">
+        ← Back to Work Orders
+    </a>
+
+    <h1>Create Work Order</h1>
+
+    <form th:action="@{/work-orders}"
+          method="post">
+
+        <!-- TITLE -->
+
+       <!--   <div class="form-group">
+
+            <label for="title">
+                Title
+            </label>
+
+            <input type="text"
+                   id="title"
+                   name="title"
+                   placeholder="Enter work order title"
+                   required>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+       <!--   <div class="form-group">
+
+            <label for="description">
+                Description
+            </label>
+
+            <textarea id="description"
+                      name="description"
+                      placeholder="Enter work order description"></textarea>
+
+        </div>
+
+
+        <!-- PRIORITY -->
+
+        <!--  <div class="form-group">
+
+            <label for="priority">
+                Priority
+            </label>
+
+            <select id="priority"
+                    name="priority"
+                    required>
+
+                <option value="">
+                    -- Select Priority --
+                </option>
+
+                <option th:each="p : ${priorities}"
+                        th:value="${p}"
+                        th:text="${p}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- CUSTOMER -->
+
+       <!--   <div class="form-group">
+
+            <label for="customerId">
+                Customer
+            </label>
+
+            <select id="customerId"
+                    name="customerId"
+                    required>
+
+                <option value="">
+                    -- Select Customer --
+                </option>
+
+                <option th:each="customer : ${customers}"
+                        th:value="${customer.id}"
+                        th:text="${customer.name}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- SITE -->
+
+        <!--  <div class="form-group">
+
+            <label for="siteId">
+                Site
+            </label>
+
+            <select id="siteId"
+                    name="siteId"
+                    required>
+
+                <option value="">
+                    -- Select Site --
+                </option>
+
+                <option th:each="site : ${sites}"
+                        th:value="${site.id}"
+                        th:text="${site.name}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button type="submit">
+            Create Work Order
+        </button>
+
+        <a class="cancel"
+           th:href="@{/work-orders}">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Work Order - Keystone</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(5, 20, 40, 0.97),
+                    rgba(11, 44, 76, 0.94)
+                ),
+                url("https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=2000&q=85");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+
+            color: #ffffff;
+        }
+
+        /* Background decoration */
+
+        body::before {
+            content: "";
+
+            position: fixed;
+
+            width: 600px;
+            height: 600px;
+
+            right: -250px;
+            top: -250px;
+
+            border-radius: 50%;
+
+            background: rgba(218, 169, 75, 0.10);
+
+            box-shadow:
+                0 0 120px rgba(218, 169, 75, 0.15);
+
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+
+            position: fixed;
+
+            width: 450px;
+            height: 450px;
+
+            left: -250px;
+            bottom: -250px;
+
+            border-radius: 50%;
+
+            background: rgba(31, 108, 180, 0.15);
+
+            pointer-events: none;
+        }
+
+        /* Header */
+
+        header {
+            height: 85px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 55px;
+
+            background: rgba(4, 20, 37, 0.88);
+
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+
+            backdrop-filter: blur(15px);
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 2px solid #dbaa4b;
+
+            color: #dbaa4b;
+
+            font-family: Georgia, serif;
+
+            font-size: 27px;
+
+            font-weight: bold;
+
+            clip-path: polygon(
+                15% 0,
+                85% 0,
+                100% 18%,
+                90% 100%,
+                10% 100%,
+                0 18%
+            );
+        }
+
+        .brand-name {
+            font-family: Georgia, serif;
+
+            font-size: 25px;
+
+            letter-spacing: 3px;
+
+            font-weight: bold;
+        }
+
+        .brand-subtitle {
+            color: #dbaa4b;
+
+            font-size: 9px;
+
+            letter-spacing: 2px;
+
+            margin-top: 3px;
+        }
+
+        .header-status {
+            color: #c6d3df;
+
+            font-size: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #42c97b;
+
+            box-shadow:
+                0 0 10px rgba(66,201,123,0.7);
+        }
+
+        /* Navigation */
+
+        nav {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 14px 55px;
+
+            background: rgba(8, 32, 55, 0.82);
+
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+
+            backdrop-filter: blur(12px);
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        nav a {
+            text-decoration: none;
+
+            color: #c7d4e1;
+
+            padding: 10px 17px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            transition: 0.25s;
+        }
+
+        nav a:hover {
+            color: white;
+
+            background: rgba(255,255,255,0.09);
+
+            transform: translateY(-1px);
+        }
+
+        nav a:nth-child(4) {
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1c639e,
+                    #2b79bb
+                );
+
+            box-shadow:
+                0 5px 15px rgba(29,100,159,0.25);
+        }
+
+        /* Main */
+
+        main {
+            width: 850px;
+
+            max-width: 92%;
+
+            margin: 0 auto;
+
+            padding: 45px 0 60px;
+
+            position: relative;
+
+            z-index: 1;
+        }
+
+        /* Form container */
+
+        .container {
+            width: 100%;
+
+            background:
+                rgba(255,255,255,0.96);
+
+            color: #172d45;
+
+            padding: 40px;
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 30px 70px rgba(0,0,0,0.35);
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+            width: 100%;
+            height: 5px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #145b99,
+                    #dbaa4b,
+                    #145b99
+                );
+        }
+
+        /* Back link */
+
+        .back-link {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: #1764a8;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 25px;
+
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            color: #0b3d69;
+
+            transform: translateX(-3px);
+        }
+
+        /* Heading */
+
+        .form-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+
+            padding-bottom: 25px;
+
+            border-bottom: 1px solid #e3e8ed;
+        }
+
+        .form-icon {
+            width: 62px;
+            height: 62px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b2d4d,
+                    #185b8e
+                );
+
+            color: #dbaa4b;
+
+            font-family: Georgia, serif;
+
+            font-size: 25px;
+
+            box-shadow:
+                0 8px 20px rgba(11,45,77,0.22);
+        }
+
+        .form-header h1 {
+            font-family: Georgia, serif;
+
+            font-size: 30px;
+
+            color: #102c49;
+
+            margin-bottom: 6px;
+        }
+
+        .form-header p {
+            color: #7c8996;
+
+            font-size: 14px;
+        }
+
+        /* Form */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #293b4f;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+
+            border: 1px solid #d5dce4;
+
+            border-radius: 10px;
+
+            background: #fafbfc;
+
+            color: #172d45;
+
+            font-family: "Segoe UI", Arial, sans-serif;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.25s;
+        }
+
+        input,
+        select {
+            height: 52px;
+
+            padding: 0 16px;
+        }
+
+        textarea {
+            min-height: 130px;
+
+            padding: 14px 16px;
+
+            resize: vertical;
+
+            line-height: 1.5;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #2469ad;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px rgba(36,105,173,0.10);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #9ba6b1;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        /* Two-column layout */
+
+        .form-row {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+        }
+
+        /* Section heading */
+
+        .section-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin: 30px 0 20px;
+
+            color: #173b5c;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.8px;
+
+            text-transform: uppercase;
+        }
+
+        .section-title::after {
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background: #e0e5ea;
+        }
+
+        .section-title span {
+            color: #d19f3d;
+        }
+
+        /* Buttons */
+
+        .button-row {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-top: 30px;
+
+            padding-top: 25px;
+
+            border-top: 1px solid #e3e8ed;
+        }
+
+        button {
+            height: 52px;
+
+            padding: 0 25px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #145d9f,
+                    #2877c0
+                );
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 20px rgba(20,93,159,0.25);
+
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 25px rgba(20,93,159,0.35);
+        }
+
+        .cancel {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            height: 52px;
+
+            padding: 0 25px;
+
+            text-decoration: none;
+
+            color: #526273;
+
+            background: #f3f5f7;
+
+            border: 1px solid #d8dee4;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: 0.25s;
+        }
+
+        .cancel:hover {
+            background: #e8edf1;
+
+            color: #25384b;
+
+            transform: translateY(-1px);
+        }
+
+        /* Footer */
+
+        footer {
+            text-align: center;
+
+            padding: 18px;
+
+            background:
+                rgba(3,17,31,0.80);
+
+            border-top: 1px solid rgba(255,255,255,0.08);
+
+            color: #8194a7;
+
+            font-size: 12px;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        footer span {
+            color: #dbaa4b;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 750px) {
+
+            header {
+                padding: 0 20px;
+            }
+
+            .header-status {
+                display: none;
+            }
+
+            nav {
+                padding: 12px 15px;
+
+                overflow-x: auto;
+            }
+
+            nav a {
+                white-space: nowrap;
+
+                font-size: 12px;
+
+                padding: 8px 12px;
+            }
+
+            main {
+                max-width: 94%;
+
+                padding-top: 30px;
+            }
+
+            .container {
+                padding: 30px 24px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 450px) {
+
+            .brand-name {
+                font-size: 20px;
+            }
+
+            .brand-subtitle {
+                font-size: 7px;
+            }
+
+            .logo {
+                width: 42px;
+                height: 49px;
+            }
+
+            .form-header h1 {
+                font-size: 25px;
+            }
+
+            .form-icon {
+                width: 52px;
+                height: 52px;
+            }
+
+            .container {
+                padding: 28px 20px;
+            }
+
+            .button-row {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            button,
+            .cancel {
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo-section">
+
+        <div class="logo">
+            K
+        </div>
+
+        <div>
+
+            <div class="brand-name">
+                KEYSTONE
+            </div>
+
+            <div class="brand-subtitle">
+                WORK ORDER MANAGEMENT
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-status">
+
+        <span class="status-dot"></span>
+
+        System Online
+
+    </div>
+
+</header>
+
+
+<!-- NAVIGATION -->
+
+<nav>
+
+    <a th:href="@{/dashboard}">
+        Dashboard
+    </a>
+
+    <a th:href="@{/customers}">
+        Customers
+    </a>
+
+    <a th:href="@{/sites}">
+        Sites
+    </a>
+
+    <a th:href="@{/work-orders}">
+        Work Orders
+    </a>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<main>
+
+    <div class="container">
+
+
+        <!-- BACK -->
+
+        <a
+            class="back-link"
+            th:href="@{/work-orders}">
+
+            ← Back to Work Orders
+
+        </a>
+
+
+        <!-- HEADER -->
+
+        <div class="form-header">
+
+            <div class="form-icon">
+                W
+            </div>
+
+            <div>
+
+                <h1>
+                    Create Work Order
+                </h1>
+
+                <p>
+                    Create and assign a new work order in Keystone
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form
+            th:action="@{/work-orders}"
+            method="post">
+
+
+            <!-- BASIC INFORMATION -->
+
+            <div class="section-title">
+
+                <span>◆</span>
+
+                Basic Information
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <div class="form-group">
+
+                <label for="title">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="Enter work order title"
+                    required>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Enter work order description"></textarea>
+
+            </div>
+
+
+            <!-- PRIORITY -->
+
+            <div class="form-group">
+
+                <label for="priority">
+                    Priority
+                </label>
+
+                <select
+                    id="priority"
+                    name="priority"
+                    required>
+
+                    <option value="">
+                        -- Select Priority --
+                    </option>
+
+                    <option
+                        th:each="p : ${priorities}"
+                        th:value="${p}"
+                        th:text="${p}">
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- CUSTOMER / SITE -->
+
+            <div class="section-title">
+
+                <span>◆</span>
+
+                Location & Customer
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <!-- CUSTOMER -->
+
+                <div class="form-group">
+
+                    <label for="customerId">
+                        Customer
+                    </label>
+
+                    <select
+                        id="customerId"
+                        name="customerId"
+                        required>
+
+                        <option value="">
+                            -- Select Customer --
+                        </option>
+
+                        <option
+                            th:each="customer : ${customers}"
+                            th:value="${customer.id}"
+                            th:text="${customer.name}">
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- SITE -->
+
+                <div class="form-group">
+
+                    <label for="siteId">
+                        Site
+                    </label>
+
+                    <select
+                        id="siteId"
+                        name="siteId"
+                        required>
+
+                        <option value="">
+                            -- Select Site --
+                        </option>
+
+                        <option
+                            th:each="site : ${sites}"
+                            th:value="${site.id}"
+                            th:text="${site.name}">
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="button-row">
+
+                <button type="submit">
+
+                    ✓ &nbsp; Create Work Order
+
+                </button>
+
+
+                <a
+                    class="cancel"
+                    th:href="@{/work-orders}">
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    Keystone Work Order Management System
+    &nbsp; • &nbsp;
+    <span>Work Order Creation</span>
+
+</footer>
+
+
+</body>
+
+</html>
